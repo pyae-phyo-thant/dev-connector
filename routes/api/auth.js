@@ -6,7 +6,7 @@ const config = require("config");
 const { check, validationResult } = require("express-validator");
 const auth = require("../../middleware/auth");
 
-router.get("/", auth, (req, res) => res.send(res.user));
+router.get("/me", auth, (req, res) => res.send(res.user));
 
 router.post(
   "/",
