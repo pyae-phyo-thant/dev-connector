@@ -1,15 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const bcrypy = require("bcryptjs");
+const bcrypt = require("bcryptjs");
 const config = require("config");
 const { check, validationResult } = require("express-validator");
 const auth = require("../../middleware/auth");
 
-router.get("/me", auth, (req, res) => res.send(res.user));
+router.get("/", (req, res) => res.send(res.user));
 
 router.post(
-  "/",
+  "/login",
   [
     check("email", "Please enter valid email").isEmail(),
     check("password", "password is require").exists(),
@@ -28,10 +28,10 @@ router.post(
       if (!user) {
         return res
           .status(400)
-          .json({ errors: [{ msg: "Invalid login information !" }] });
+          .json({ errors: [{ msg: "Email does not exist !" }] });
       }
 
-      const isMatch = await bcrypy.compare(password, user.password);
+      const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
         return res
