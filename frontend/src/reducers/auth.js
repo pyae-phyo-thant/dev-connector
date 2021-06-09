@@ -11,11 +11,11 @@ import {
 const initialState = {
   token: localStorage.getItem("token"),
   isAuthenticated: null,
-  isLoading: true,
+  loading: true,
   user: null,
 };
 
-export default function (state = initialState, action) {
+export default function auth(state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
@@ -23,7 +23,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         isAuthenticated: true,
-        isLoading: false,
+        loading: false,
         user: payload,
       };
     case REGISTER_SUCCESS:
@@ -33,7 +33,7 @@ export default function (state = initialState, action) {
         ...state,
         ...payload,
         isAuthenticated: true,
-        isLoading: false,
+        loading: false,
       };
     case REGISTER_FAIL:
     case AUTH_ERROR:
@@ -42,9 +42,9 @@ export default function (state = initialState, action) {
       localStorage.removeItem("token");
       return {
         ...state,
-        ...payload,
+        token: null,
         isAuthenticated: false,
-        isLoading: false,
+        loading: false,
       };
     default:
       return state;

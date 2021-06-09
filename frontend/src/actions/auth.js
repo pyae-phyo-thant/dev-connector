@@ -8,6 +8,7 @@ import {
   USER_LOADED,
   AUTH_ERROR,
   LOGOUT,
+  CLEAR_PROFILE,
 } from "./types";
 import setAuthToken from "../utils/setAuthToken";
 
@@ -17,19 +18,19 @@ export const loadUser = () => async (dispatch) => {
     setAuthToken(localStorage.token);
   }
 
-  const config = {
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-    },
-  };
-
   try {
     const res = await axios.get("/api/auth");
 
-    dispatch({
-      type: USER_LOADED,
-      payload: res.data,
-    });
+    if (localStorage.token) {
+      dispatch({
+        type: USER_LOADED,
+        payload: res.data,
+      });
+    } else {
+      dispatch({
+        type: AUTH_ERROR,
+      });
+    }
   } catch (err) {
     dispatch({
       type: AUTH_ERROR,
@@ -103,5 +104,6 @@ export const login =
 
 //Logout
 export const logout = () => (dispatch) => {
+  dispatch({ type: CLEAR_PROFILE });
   dispatch({ type: LOGOUT });
 };
