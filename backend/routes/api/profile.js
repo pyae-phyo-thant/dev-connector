@@ -27,7 +27,13 @@ router.get(`/me`, auth, async (req, res) => {
 
 router.post(
   "/",
-  [auth, [check("status", "Status is required").not().isEmpty()]],
+  [
+    auth,
+    [
+      check("status", "Status is required").not().isEmpty(),
+      check("skills", "Skills is required").not().isEmpty(),
+    ],
+  ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -88,7 +94,7 @@ router.post(
       await profile.save();
       res.json(profile);
     } catch (err) {
-      res.status(500).send(err) + "server error";
+      res.status(500).send(err);
     }
   }
 );
@@ -171,7 +177,7 @@ router.put(
 
       res.json(profile);
     } catch (err) {
-      res.status(500).send(err);
+      res.json(err);
     }
   }
 );

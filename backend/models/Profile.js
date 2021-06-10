@@ -20,7 +20,6 @@ const profileSchema = new mongoose.Schema({
   },
   skills: {
     type: [String],
-    required: true,
   },
   bio: {
     type: String,
@@ -47,7 +46,6 @@ const profileSchema = new mongoose.Schema({
       },
       to: {
         type: Date,
-        required: true,
       },
       current: {
         type: Boolean,
