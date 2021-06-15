@@ -1,6 +1,0 @@
-{
-    "mongoURI": "mongodb+srv://pyae_phyo_thant:8101998pyae@devconnector.d3f04.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    "jwtToken": "mysecrettoken",
-    "githubClientId": "Iv1.b2eab3bc18a188b0",
-    "githubToken": "9f97fe266a3644ea1e25e308a80e617d6e8ffe74"
-}
