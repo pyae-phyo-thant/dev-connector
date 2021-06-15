@@ -17,7 +17,7 @@ app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/profile", require("./routes/api/profile"));
 
 //serve static assets in producation
-if ((process.end.NODE_ENV = "production")) {
+if (process.env.NODE_ENV === "production") {
   //Set static doler
   app.use(express.static("../frontend/build"));
 
