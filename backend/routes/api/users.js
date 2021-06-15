@@ -36,6 +36,7 @@ router.post(
       }
 
       const avatar = gravatar.url(email, {
+        protocol: "https",
         s: "200",
         r: "pg",
         d: "mm",
@@ -57,7 +58,7 @@ router.post(
       const payload = {
         user: {
           id: user.id,
-        }, 
+        },
       };
 
       jwt.sign(
@@ -69,7 +70,6 @@ router.post(
           res.json({ token });
         }
       );
-
     } catch (error) {
       res.status(500).send(error);
     }

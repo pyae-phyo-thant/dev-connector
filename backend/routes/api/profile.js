@@ -1,5 +1,5 @@
 const express = require("express");
-const request = require("request");
+const axios = require("axios");
 const config = require("config");
 const router = express.Router();
 const auth = require("../../middleware/auth");
@@ -7,9 +7,12 @@ const { check, validationResult } = require("express-validator");
 
 const Profile = require("../../models/Profile");
 const User = require("../../models/User");
-const Auth = require("../api/auth");
+const Post = require("../../models/Post");
 
-router.get(`/me`, auth, async (req, res) => {
+// @route    GET api/profile/me
+// @desc     Get current users profile
+// @access   Private
+router.get(`/:id`, auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.user.id }).populate(
       "user",
@@ -25,6 +28,9 @@ router.get(`/me`, auth, async (req, res) => {
   }
 });
 
+// @route    POST api/profile
+// @desc     Create or update user profile
+// @access   Private
 router.post(
   "/",
   [
@@ -50,9 +56,9 @@ router.post(
       skills,
       youtube,
       facebook,
-      twitter,
       instagram,
       linkedin,
+      twitter,
     } = req.body;
 
     //Build profile object
@@ -131,7 +137,7 @@ router.get("/user/:user_id", async (req, res) => {
 router.delete("/", auth, async (req, res) => {
   try {
     //remove user post
-    //--------
+    await Post.deleteMany({ user: req.user.id });
     //remove profile
     await Profile.findOneAndRemove({ user: req.user.id });
     //also remove user
@@ -266,28 +272,25 @@ router.delete("/education/:edu_id", auth, async (req, res) => {
   }
 });
 
-router.get("/github/:username", (req, res) => {
+// @route    GET api/profile/github/:username
+// @desc     Get user repos from Github
+// @access   Public
+router.get("/github/:username", async (req, res) => {
   try {
-    const options = {
-      uri: `https://api.github.com/users/${
-        req.params.username
-      }/repos?per_page=5&sort=created:asc&client_id=${config.get(
-        "githubClientId"
-      )}&client_secret=${config.get("githubSecret")}`,
-      method: "GET",
-      headers: { "user-agent": "node.js" },
+    const uri = encodeURI(
+      `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:dsc`
+    );
+    const headers = {
+      "User-Agent": "node.js",
+      Authorization: `${config.get("githubToken")}`,
     };
-    request(options, (error, response, body) => {
-      if (error) console.log(error);
 
-      if (response.statusCode !== 200) {
-        return res.status(404).json({ msg: "No Github Profile Found" });
-      }
-
-      res.json(JSON.parse(body));
-    });
+    const gitHubResponse = await axios.get(uri, { headers });
+    return res.json(gitHubResponse.data);
   } catch (err) {
-    res.status(500).send(err);
+    console.error(err.message);
+    return res.status(404).json({ msg: "No Github profile found" });
   }
 });
+
 module.exports = router;

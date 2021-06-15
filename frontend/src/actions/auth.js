@@ -61,7 +61,9 @@ export const register =
       const errors = err.response.data.errors;
 
       if (errors) {
-        errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+        Array.prototype.forEach.call(errors, (error) =>
+          dispatch(setAlert(error.msg, "danger"))
+        );
       }
       dispatch({
         type: REGISTER_FAIL,
@@ -94,7 +96,9 @@ export const login =
       const errors = err.response.data.errors;
 
       if (errors) {
-        errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+        Array.prototype.forEach.call(errors, (error) =>
+          dispatch(setAlert(error.msg, "danger"))
+        );
       }
       dispatch({
         type: LOGIN_FAIL,

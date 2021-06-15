@@ -179,7 +179,10 @@ img {
   background: var(--dark-color);
   color: #fff;
 }
-
+.btn-danger-disable {
+  background-color: #ee837d;
+  color: #fff;
+}
 .btn-danger,
 .bg-danger,
 .badge-danger,

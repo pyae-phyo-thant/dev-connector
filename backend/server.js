@@ -1,5 +1,6 @@
 const express = require("express");
 const connectDb = require("./config/db");
+const path = require("path");
 
 const app = express();
 
@@ -15,7 +16,15 @@ app.use("/api/posts", require("./routes/api/posts"));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/profile", require("./routes/api/profile"));
 
-app.get("/", (req, res) => res.send("API Running"));
+//serve static assets in producation
+if ((process.end.NODE_ENV = "production")) {
+  //Set static doler
+  app.use(express.static("../frontend/build"));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../frontend", "build", "index.html"));
+  });
+}
 
 const PORT = process.env.PORT || 5000;
 

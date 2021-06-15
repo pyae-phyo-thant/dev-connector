@@ -1,19 +1,21 @@
 import React, { Fragment } from "react";
-import spinnerGif from "./spinner.gif";
+import notFound from "./notFound.gif";
 
-export default function spinner() {
+const NotFound = () => {
   return (
     <Fragment>
       <img
-        src={spinnerGif}
+        src={notFound}
         style={{
           width: "auto",
           margin: "auto",
           display: "block",
-          marginTop: "100px",
+          marginTop: "0px",
         }}
         alt="loading..."
       />
     </Fragment>
   );
-}
+};
+
+export default NotFound;
