@@ -108,7 +108,10 @@ const Profile = ({
             {/* About */}
             <div className="profile-about bg-light p-2">
               <h2 className="text-primary">
-                {profile.user.name.trim().split(" ")[0]} Bio
+                {profile.user.name === undefined
+                  ? " "
+                  : profile.user.name.trim().split(" ")[0]}{" "}
+                Bio
               </h2>
               <p>{profile.bio}</p>
               <div className="line"></div>

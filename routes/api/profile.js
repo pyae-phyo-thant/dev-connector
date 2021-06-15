@@ -12,10 +12,10 @@ const Post = require("../../models/Post");
 // @route    GET api/profile/me
 // @desc     Get current users profile
 // @access   Private
-router.get(`/:id`, auth, async (req, res) => {
+router.get(`/me`, auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.user.id }).populate(
-      "user",
+      "users",
       ["name", "avatar"]
     );
     if (!profile) {
@@ -56,9 +56,9 @@ router.post(
       skills,
       youtube,
       facebook,
+      twitter,
       instagram,
       linkedin,
-      twitter,
     } = req.body;
 
     //Build profile object
@@ -78,12 +78,12 @@ router.post(
     }
 
     //Build social object
-    profileFields.socials = {};
-    if (youtube) profileFields.socials.youtube = youtube;
-    if (facebook) profileFields.socials.facebook = facebook;
-    if (instagram) profileFields.socials.instagram = instagram;
-    if (linkedin) profileFields.socials.linkedin = linkedin;
-    if (twitter) profileFields.socials.twitter = twitter;
+    profileFields.social = {};
+    if (youtube) profileFields.social.youtube = youtube;
+    if (facebook) profileFields.social.facebook = facebook;
+    if (instagram) profileFields.social.instagram = instagram;
+    if (linkedin) profileFields.social.linkedin = linkedin;
+    if (twitter) profileFields.social.twitter = twitter;
 
     try {
       let profile = await Profile.findOne({ user: req.user.id });
@@ -122,7 +122,7 @@ router.get("/user/:user_id", async (req, res) => {
     const profile = await Profile.findOne({
       user: req.params.user_id,
     }).populate("user", ["name", "avatar"]);
-    console.log(req.params);
+
     if (!profile) return res.status(400).json({ msg: "Profile not found" });
 
     res.json(profile);

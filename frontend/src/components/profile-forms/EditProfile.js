@@ -1,8 +1,23 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { createProfile, getCurrentProfile } from "../../actions/profile";
+
+const initialState = {
+  company: "",
+  website: "",
+  location: "",
+  status: "",
+  skills: "",
+  githubusername: "",
+  bio: "",
+  twitter: "",
+  facebook: "",
+  linkedin: "",
+  youtube: "",
+  instagram: "",
+};
 
 const EditProfile = ({
   profile: { profile, loading },
@@ -10,41 +25,26 @@ const EditProfile = ({
   getCurrentProfile,
   history,
 }) => {
-  const [formData, setFormData] = useState({
-    company: "",
-    website: "",
-    location: "",
-    status: "",
-    skills: "",
-    githubusername: "",
-    bio: "",
-    youtube: "",
-    facebook: "",
-    instagram: "",
-    linkedin: "",
-    twitter: "",
-  });
+  const [formData, setFormData] = useState(initialState);
 
   const [displaySocialInput, toggleSocialInputs] = useState(false);
 
   useEffect(() => {
-    getCurrentProfile();
-    setFormData({
-      company: loading || !profile.company ? "" : profile.company,
-      website: loading || !profile.website ? "" : profile.website,
-      location: loading || !profile.location ? "" : profile.location,
-      status: loading || !profile.status ? "" : profile.status,
-      skills: loading || !profile.skills ? "" : profile.skills,
-      githubusername:
-        loading || !profile.githubusername ? "" : profile.githubusername,
-      bio: loading || !profile.bio ? "" : profile.bio,
-      youtube: loading || !profile.youtube ? "" : profile.social.youtube,
-      facebook: loading || !profile.facebook ? "" : profile.social.facebook,
-      instagram: loading || !profile.instagram ? "" : profile.social.instagram,
-      linkedin: loading || !profile.linkedin ? "" : profile.social.linkedin,
-      twitter: loading || !profile.twitter ? "" : profile.social.twitter,
-    });
-  }, [loading, getCurrentProfile]);
+    if (!profile) getCurrentProfile();
+
+    if (!loading && profile) {
+      const profileData = { ...initialState };
+      for (const key in profile) {
+        if (key in profileData) profileData[key] = profile[key];
+      }
+      for (const key in profile.social) {
+        if (key in profileData) profileData[key] = profile.social[key];
+      }
+      if (Array.isArray(profileData.skills))
+        profileData.skills = profileData.skills.join(", ");
+      setFormData(profileData);
+    }
+  }, [loading, getCurrentProfile, profile]);
 
   const {
     company,
@@ -61,13 +61,13 @@ const EditProfile = ({
     twitter,
   } = formData;
 
-  const onChange = async (e) => {
+  const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    createProfile(formData, history, true);
+    createProfile(formData, history, profile ? true : false);
   };
 
   return (
@@ -229,7 +229,7 @@ const EditProfile = ({
                 placeholder="Instagram URL"
                 name="instagram"
                 value={instagram}
-                onChange={(e) => onChange(e)}
+                onChange={onChange}
               />
             </div>
           </Fragment>
@@ -255,5 +255,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, { createProfile, getCurrentProfile })(
-  withRouter(EditProfile)
+  EditProfile
 );

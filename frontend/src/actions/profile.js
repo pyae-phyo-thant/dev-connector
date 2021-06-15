@@ -15,14 +15,12 @@ import {
 //Get Current User Profile
 export const getCurrentProfile = () => async (dispatch) => {
   try {
-    const res = await axios.get("/api/profile/me ");
+    const res = await axios.get("/api/profile/me");
 
-    setTimeout(() => {
-      dispatch({
-        type: GET_PROFILE,
-        payload: res.data,
-      });
-    }, 500);
+    dispatch({
+      type: GET_PROFILE,
+      payload: res.data,
+    });
   } catch (err) {
     dispatch({
       type: PROFILE_ERROR,
@@ -43,7 +41,7 @@ export const getProfiles = () => async (dispatch) => {
         type: GET_PROFILES,
         payload: res.data,
       });
-    }, 1000);
+    }, 500);
   } catch (err) {
     dispatch({
       type: PROFILE_ERROR,
@@ -75,7 +73,7 @@ export const getProfileById = (userId) => async (dispatch) => {
 export const getGithubRepos = (username) => async (dispatch) => {
   try {
     const res = await axios.get(`/api/profile/github/${username}`);
-    console.log(res.data);
+
     dispatch({
       type: GET_REPOS,
       payload: res.data,
@@ -93,13 +91,7 @@ export const createProfile =
   (formData, history, edit = false) =>
   async (dispatch) => {
     try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-
-      const res = await axios.post("/api/profile", formData, config);
+      const res = await axios.post("/api/profile", formData);
 
       dispatch({
         type: GET_PROFILE,
